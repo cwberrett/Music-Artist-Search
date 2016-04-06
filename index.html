@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Musician Search</title>
+    <link rel="stylesheet" type="text/css" href="../normalize.css">
+    <link rel="stylesheet" type="text/css" href="css/styles.css">
+</head>
+
+<body>
+    <header>
+        <h1>Music search</h1>
+        <p>Get info about artists, albums and songs</p>
+    </header>
+    <section>
+        <ul id="tabs">
+            <li><a href="#artist" class="selected">Artist</a></li>
+            <li><a href="#album">Album</a></li>
+            <li><a href="#song">Song</a></li>
+        </ul>
+        <div class="tabContent" id="artist">
+            <h2>Search for Artist</h2>
+            <div class="results">
+	            <h3>Choose the correct artist</h3>
+	            <ul></ul>
+        	</div>
+            <div class="rowData">
+                <div class="column">
+                    <img src="" alt="Image of Artist">
+                    <p id="artName">Artist Name</p>
+                </div>
+                <div class="column">
+                    <ul class="list1">Albumns</ul>
+                    <button id="prevAlbs">Previous</button>
+                    <button id="nextAlbs">Next</button>
+                </div>
+                <div class="column">
+                    <ul class="list2">Top Songs</ul>
+                </div>
+            </div>
+            <div class="row">
+                <input id="artQuery" type='text'>
+                <button class="search" id='searchArt'>Search</button>
+            </div>
+        </div>
+        <div class="tabContent" id="album">
+            <h2>Search for an Album</h2>
+            <div class="results">
+	            <h3>Choose the correct album</h3>
+	            <ul></ul>
+	        </div>
+            <div class="rowData">
+                <div class="column">
+                    <img src="" alt="Image of Album">
+                    <p>Album Name</p>
+                </div>
+                <div class="column">
+                    <ul class="list1">Track List</ul>
+                </div>
+                <div class="column">
+                    <ul class='list2'>Other Ablums</ul>
+                </div>
+            </div>
+            <div class="row">
+                <input id="albQuery" type='text'>
+                <button class="search" id='searchAlb'>Search</button>
+            </div>
+        </div>
+        <div class="tabContent" id="song">
+            <h2>Search for a Song</h2>
+            <div class="results">
+	            <h3>Choose the correct Song</h3>
+	            <ul></ul>
+	        </div>
+            <div class="rowData">
+                <div class="column">
+                    <img src="" alt="Image of Album">
+                    <p>Song Name</p>
+                </div>
+                <div class="column">
+                    <ul class="list1">Similar Songs</ul>
+                </div>
+                <div class="column">
+                    <ul class="list2">From Same Artist</ul>
+                </div>
+            </div>
+            <div class="row">
+                <input id="songQuery" type='text'>
+                <button class="search" id='searchSong'>Search</button>
+            </div>
+        </div>
+    </section>
+    <footer class="foot-row">
+        <img src="images/spot.png" class="logo">
+        <div class="center">
+            <img src="images/ProfilePic.jpg" alt="Developer Image" class="profile">
+            <br>
+            <a>Cameron Berrett</a>
+        </div>
+    </footer>
+    <script type="text/javascript" src="../jquery-2.1.4.min.js"></script>
+    <script type="text/javascript" src="js/app.js"></script>
+</body>
+
+</html>
