@@ -1,22 +1,188 @@
-var tablist = [];
-var off = 0;
+//Defines an object that will store all the data for the artist tab
+//and has the methods to call for and display the data
+var artObj = {
+    albOffset: 0,
+    id: "",
+    getArtist: function() {
+        var id = this.id;
+        var call = $.getJSON('https://api.spotify.com/v1/artists/' + id);
+        call.done(function(data) {
+            artObj.person = data;
+            var albCall = $.getJSON('https://api.spotify.com/v1/artists/' + id + '/albums?limit=10&offset=' + artObj.albOffset);
+            albCall.done(function(data) {
+                artObj.albums = data;
+                var songCall = $.getJSON('https://api.spotify.com/v1/artists/' + id + '/top-tracks?country=US');
+                songCall.done(function(data) {
+                    artObj.topSongs = data;
+                    console.log(artObj);
+                    artObj.displayArtist();
+                });
+            });
+        });
+    },
+    moreAlbums: function(change) {
+        if (change) {
+            this.albOffset += 10;
+            if (this.albOffset >= this.albums.total) {
+                this.albOffset = this.albums.total - 10;
+            }
+            this.getArtist();
+        } else {
+            this.albOffset -= 10;
+            if (this.albOffset <= 10) {
+                this.albOffset = 0;
+            }
+            this.getArtist();
+        }
+    },
+    displayArtist: function() {
+        $("#artist .results").hide();
+        $("#artist .rowData").show();
+        $("#artist .list1 li").remove();
+        $("#artist .list2 li").remove();
+        $("#artist").find("img").attr('src', this.person.images[0].url);
+        $("#artName").text(this.person.name);
+        var albums = this.albums.items;
+        var albComp;
+        $.each(albums, function(key, value) {
+            if (value.name == albComp) {
+                console.log("repeat");
+            } else {
+                var entry = "<li id='" + value.id + "'>" + value.name + "</li>";
+                $("#artist").find(".list1").append(entry);
+            }
+            albComp = value.name;
+        });
+        var songs = this.topSongs.tracks;
+        $.each(songs, function(key, value) {
+            var entry = "<li id='" + value.id + "''>" + value.name + "</li>";
+            $("#artist").find(".list2").append(entry);
 
-//gets tabs and buttons and assigns onclick events to change the tabs and make api calls
-function getContents() {
-    tablist = $("#tabs").children();
-    $("#tabs > li").on('click', 'a', changeTab);
-    $(".tabContent").first().show();
+        });
+    }
+};
 
-}
+//Defines an object to call for, store and display the data for the album tab
+var albObj = {
+    id: "",
+    getAlbum: function() {
+        var call = $.getJSON('https://api.spotify.com/v1/albums/' + this.id);
+        call.done(function(data) {
+            albObj.album = data;
+            var artCall = $.getJSON('https://api.spotify.com/v1/artists/' + albObj.album.artists[0].id + '/albums?limit=10');
+            artCall.done(function(data) {
+                albObj.otherAlbs = data;
+                console.log(albObj);
+                albObj.displayAlbum();
+            });
+        });
 
-function clearContent(id) {
-	$(id+ " .results ul").empty();
-    $(".rowData").hide();
-    $(".results").hide();
-    $(id).find(".list1").empty();
-    $(id).find(".list2").empty();
-}
+    },
+    displayAlbum: function() {
+        $("#album .results").hide();
+        $("#album .rowData").show();
+        $("#album .list1 li").empty();
+        $("#album .list2 li").empty();
+        $("#album").find("img").attr('src', this.album.images[0].url);
+        $("#albName").text(this.album.name);
+        $("#albArtist").text("By:" + this.album.artists[0].name);
+        var tracks = this.album.tracks.items;
+        $.each(tracks, function(key, value) {
+            var entry = "<li id='" + value.id + "'>" + value.name + "</li>";
+            $("#album").find(".list1").append(entry);
+        });
+        var others = this.otherAlbs.items;
+        var albComp;
+        $.each(others, function(key, value) {
+            if (value.name == albComp) { console.log("repeat"); } else {
+                var entry = "<li id='" + value.id + "'>" + value.name + "</li>";
+                $("#album").find(".list2").append(entry);
+            }
+            albComp = value.name;
+        });
+    }
+};
 
+//Defines an object to call for, store and display the data for the song tab
+var songObj = {
+    id: "",
+    getSong: function() {
+        var call = $.getJSON("https://api.spotify.com/v1/tracks/" + this.id);
+        call.done(function(data) {
+            songObj.track = data;
+            var albCall = $.getJSON(songObj.track.album.href);
+            albCall.done(function(info) {
+                songObj.album = info;
+                console.log(songObj);
+                songObj.displaySong();
+            });
+        });
+    },
+    displaySong: function() {
+        $("#track .results").hide();
+        $("#track .rowData").show();
+        $("#track .list1 li").empty();
+        $("#track .list2 li").empty();
+        $("#track").find("img").attr('src', this.track.album.images[0].url);
+        $("#trackName").text(this.track.name);
+        var entry = ["Artist: " + this.track.artists[0].name, "Album: " + this.track.album.name, "Popularity: " + this.track.popularity];
+        for (var item in entry) {
+            var li = "<li>" + entry[item] + "</li>";
+            $("#track").find(".list1").append(li);
+        }
+        $.each(this.album.tracks.items, function(key, value) {
+            if (value.name != songObj.track.name) {
+                var entry2 = "<li id='" + value.id + "'>" + value.name + "</li>";
+                $("#track").find(".list2").append(entry2);
+            }
+        });
+    }
+};
+
+//Defines an object to search for artists, albums or songs and then store
+//and display the results
+var searchObj = {
+    offset: "0",
+    getList: function(query, type) {
+        var call = $.getJSON("https://api.spotify.com/v1/search?limit=10&type=" + type + "&q=" + query + "&offset=" + this.offset);
+        call.done(function(data) {
+            searchObj.list = data;
+            searchObj.displayList(type);
+        });
+    },
+    displayList: function(type) {
+        $("#" + type + " .rowData").hide();
+        $("#" + type + " .results").show();
+        $(".results ul").empty();
+        var listName = type + 's';
+        var list = this.list[listName].items;
+        $.each(list, function(key, value) {
+            var entry = "<li id='" + value.id + "''>" + value.name + "</li>";
+            if (type == 'track') {
+                var pos = entry.indexOf("-");
+                var n = [entry.slice(0, pos + 1), value.artists[0].name, entry.slice(pos + 1)].join('');
+                entry = n;
+            }
+            $("#" + type + " .results ul").append(entry);
+        });
+
+        $("#" + type + " .results ul").off('click').on('click', 'li', function() {
+            if (type == "artist") {
+                artObj.id = $(this).attr('id');
+                artObj.getArtist();
+            } else if (type == 'album') {
+                albObj.id = $(this).attr('id');
+                albObj.getAlbum();
+            } else {
+                songObj.id = $(this).attr('id');
+                songObj.getSong();
+            }
+
+        });
+    }
+};
+
+//function to change tabs when clicked
 function changeTab() {
     $(".tabContent").hide();
     var sel = $(this).attr('href');
@@ -25,76 +191,49 @@ function changeTab() {
     $(this).addClass("selected");
 }
 
-function callArt() {
-    $.getJSON('https://api.spotify.com/v1/search', {
-        "q": $("#artQuery").val(),
-        "type": "artist",
-        "limit": 10,
-        "offset": off
-    }, function(data) {
-        displayArtistResults(data.artists.items, "#artist");
-        console.log(data.artists.items);
-    });
-}
-
-function displayArtistResults(artists, id) {
-    $("#album, #song").hide();
-    $("#artist .results").show();
-    var i = 0;
-    $.each(artists, function(index, artist) {
-        var entry = "<li id='" + artist.id + "''>" + artist.name + "</li>";
-        $(id + " .results ul").append(entry);
-    });
-    $("#artist ul").off('click').on('click', 'li', getArtist);
-}
-
-function getArtist() {
-    var artist = new Object();
-    var id = $(this).attr('id');
-    $.when(
-        $.getJSON('https://api.spotify.com/v1/artists/' + id, function(data) {
-            artist.person = data;
-        }),
-        $.getJSON('https://api.spotify.com/v1/artists/' + id + '/top-tracks?country=US', function(trackList) {
-            artist.topTracks = trackList.tracks;
-        }),
-        $.getJSON('https://api.spotify.com/v1/artists/' + id + '/albums?limit=10', function(albums) {
-            artist.albums = albums.items;
-        })
-    ).then(function() {
-
-        displayArtist(artist);
-
-    });
-}
-
-function displayArtist(artist) {
-    $("#artist .results").hide();
-    $("#artist .rowData").show();
-    $("#artist .rowData .column img").attr('src', artist.person.images[0].url);
-    $("#artName").text(artist.person.name);
-    var entry;
-    for (var track in artist.topTracks) {
-        entry = "<li>" + artist.topTracks[track].name + "</li>";
-        $("#artist").find(".list2").append(entry);
-    }
-    for (var album in artist.albums) {
-        entry = "<li>" + artist.albums[album].name + "</li>";
-        $("#artist").find(".list1").append(entry);
-    // }
-    // $("#list1").parent().append("<button id='nextAlbs'>Next")
-}
-//get the contents and
 $(document).ready(function() {
+    //set visibility to show only one tab and to show search content
     $(".tabContent").hide();
     $(".rowData").hide();
     $(".results").hide();
+    $(".tabContent").first().show();
 
-    getContents();
+    //adds click functionality to change tabs
+    $("#tabs > li").on('click', 'a', changeTab);
+
 
     $("#searchArt").click(function() {
-        clearContent('#artist');
-        callArt();
+        searchObj.getList($("#artQuery").val(), "artist");
     });
+    $("#artQuery").keyup(function(e) {
+        if (e.keyCode == 13) {
+            searchObj.getList($("#artQuery").val(), "artist");
+        }
+    });
+
+    $("#prevAlbs").click(function() {
+        artObj.moreAlbums(false);
+    });
+    $("#nextAlbs").click(function() {
+        artObj.moreAlbums(true);
+    });
+
+    $("#searchAlb").click(function() {
+        searchObj.getList($("#albQuery").val(), "album");
+    });
+    $("#albQuery").keyup(function(e) {
+        if (e.keyCode == 13) {
+            searchObj.getList($("#albQuery").val(), "album");
+        }
+    });
+    $("#searchTrack").click(function() {
+        searchObj.getList($("#trackQuery").val(), "track");
+    });
+    $("#trackQuery").keyup(function(e) {
+        if (e.keyCode == 13) {
+            searchObj.getList($("#trackQuery").val(), "track");
+        }
+    });
+
 
 });

@@ -17,7 +17,7 @@
         <ul id="tabs">
             <li><a href="#artist" class="selected">Artist</a></li>
             <li><a href="#album">Album</a></li>
-            <li><a href="#song">Song</a></li>
+            <li><a href="#track">Song</a></li>
         </ul>
         <div class="tabContent" id="artist">
             <h2>Search for Artist</h2>
@@ -31,7 +31,7 @@
                     <p id="artName">Artist Name</p>
                 </div>
                 <div class="column">
-                    <ul class="list1">Albumns</ul>
+                    <ul class="list1">Albums</ul>
                     <button id="prevAlbs">Previous</button>
                     <button id="nextAlbs">Next</button>
                 </div>
@@ -53,7 +53,8 @@
             <div class="rowData">
                 <div class="column">
                     <img src="" alt="Image of Album">
-                    <p>Album Name</p>
+                    <p id="albName">Album Name</p>
+                    <p id="albArtist"></p>
                 </div>
                 <div class="column">
                     <ul class="list1">Track List</ul>
@@ -67,7 +68,7 @@
                 <button class="search" id='searchAlb'>Search</button>
             </div>
         </div>
-        <div class="tabContent" id="song">
+        <div class="tabContent" id="track">
             <h2>Search for a Song</h2>
             <div class="results">
 	            <h3>Choose the correct Song</h3>
@@ -76,18 +77,19 @@
             <div class="rowData">
                 <div class="column">
                     <img src="" alt="Image of Album">
-                    <p>Song Name</p>
+                    <p id="trackName">Track Name</p>
+                    <p id="trackAlb"></p>
                 </div>
                 <div class="column">
-                    <ul class="list1">Similar Songs</ul>
+                    <ul class="list1">Song Info</ul>
                 </div>
                 <div class="column">
-                    <ul class="list2">From Same Artist</ul>
+                    <ul class="list2">Other Songs on Album</ul>
                 </div>
             </div>
             <div class="row">
-                <input id="songQuery" type='text'>
-                <button class="search" id='searchSong'>Search</button>
+                <input id="trackQuery" type='text'>
+                <button class="search" id='searchTrack'>Search</button>
             </div>
         </div>
     </section>
