@@ -4,26 +4,29 @@
 <head>
     <meta charset="UTF-8">
     <title>Musician Search</title>
-    <link rel="stylesheet" type="text/css" href="../normalize.css">
-    <link rel="stylesheet" type="text/css" href="css/styles.css">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+<!--     <link rel="stylesheet" type="text/css" href="../normalize.css">
+   -->  <link rel="stylesheet" type="text/css" href="css/styles.css">
 </head>
 
 <body>
     <header>
         <h1>Music search</h1>
-        <p>Get info about artists, albums and songs</p>
+        <h3>Get info about artists, albums and songs</h3>
     </header>
     <section>
         <ul id="tabs">
             <li><a href="#artist" class="selected">Artist</a></li>
             <li><a href="#album">Album</a></li>
-            <li><a href="#track">Song</a></li>
+            <li><a href="#track">&nbsp;Song&nbsp;</a></li>
         </ul>
         <div class="tabContent" id="artist">
             <h2>Search for Artist</h2>
             <div class="results">
 	            <h3>Choose the correct artist</h3>
 	            <ul></ul>
+	            <button id="prevArtSearch">Previous</button>
+	            <button id="nextArtSearch">Next</button>
         	</div>
             <div class="rowData">
                 <div class="column">
@@ -31,12 +34,14 @@
                     <p id="artName">Artist Name</p>
                 </div>
                 <div class="column">
-                    <ul class="list1">Albums</ul>
+                	<h3>Albums</h3>
+                    <ul class="list1"></ul>
                     <button id="prevAlbs">Previous</button>
                     <button id="nextAlbs">Next</button>
                 </div>
                 <div class="column">
-                    <ul class="list2">Top Songs</ul>
+                	<h3>Top Songs</h3>
+                    <ul class="list2"></ul>
                 </div>
             </div>
             <div class="row">
@@ -49,6 +54,8 @@
             <div class="results">
 	            <h3>Choose the correct album</h3>
 	            <ul></ul>
+	            <button id="prevAlbSearch">Previous</button>
+	            <button id="nextAlbSearch">Next</button>
 	        </div>
             <div class="rowData">
                 <div class="column">
@@ -57,10 +64,12 @@
                     <p id="albArtist"></p>
                 </div>
                 <div class="column">
-                    <ul class="list1">Track List</ul>
+                	<h3>Track List</h3>
+                    <ul class="list1"></ul>
                 </div>
                 <div class="column">
-                    <ul class='list2'>Other Ablums</ul>
+                	<h3>Other Albums by Artist</h3>
+                    <ul class='list2'></ul>
                 </div>
             </div>
             <div class="row">
@@ -73,18 +82,23 @@
             <div class="results">
 	            <h3>Choose the correct Song</h3>
 	            <ul></ul>
+	            <button id="prevTrackSearch">Previous</button>
+	            <button id="nextTrackSearch">Next</button>
 	        </div>
             <div class="rowData">
                 <div class="column">
                     <img src="" alt="Image of Album">
                     <p id="trackName">Track Name</p>
+                    <p id="trackArt"></p>
                     <p id="trackAlb"></p>
                 </div>
                 <div class="column">
-                    <ul class="list1">Song Info</ul>
+                	<h3>Other Songs on Album</h3>
+                    <ul class="list1"></ul>
                 </div>
                 <div class="column">
-                    <ul class="list2">Other Songs on Album</ul>
+                	<h3>Other Albums by Artist</h3>
+                    <ul class="list2"></ul>
                 </div>
             </div>
             <div class="row">
@@ -94,7 +108,12 @@
         </div>
     </section>
     <footer class="foot-row">
-        <img src="images/spot.png" class="logo">
+    	<div class="center">
+            <a href="https://www.spotify.com/us/"><img src="images/spot.png" class="logo"></a>
+            <br>
+            <a>Powered by Spotify</a>
+        </div>
+
         <div class="center">
             <img src="images/ProfilePic.jpg" alt="Developer Image" class="profile">
             <br>

@@ -29,7 +29,7 @@ var artObj = {
             this.getArtist();
         } else {
             this.albOffset -= 10;
-            if (this.albOffset <= 10) {
+            if (this.albOffset < 10) {
                 this.albOffset = 0;
             }
             this.getArtist();
@@ -81,8 +81,8 @@ var albObj = {
     displayAlbum: function() {
         $("#album .results").hide();
         $("#album .rowData").show();
-        $("#album .list1 li").empty();
-        $("#album .list2 li").empty();
+        $("#album .list1 li").remove();
+        $("#album .list2 li").remove();
         $("#album").find("img").attr('src', this.album.images[0].url);
         $("#albName").text(this.album.name);
         $("#albArtist").text("By:" + this.album.artists[0].name);
@@ -106,6 +106,7 @@ var albObj = {
 //Defines an object to call for, store and display the data for the song tab
 var songObj = {
     id: "",
+    offset: 0,
     getSong: function() {
         var call = $.getJSON("https://api.spotify.com/v1/tracks/" + this.id);
         call.done(function(data) {
@@ -113,28 +114,38 @@ var songObj = {
             var albCall = $.getJSON(songObj.track.album.href);
             albCall.done(function(info) {
                 songObj.album = info;
-                console.log(songObj);
-                songObj.displaySong();
+                var artCall = $.getJSON('https://api.spotify.com/v1/artists/' + songObj.track.artists[0].id + '/albums?limit=10&offset=' + songObj.offset);
+                artCall.done(function(art) {
+                    songObj.otherAlbs = art;
+                    console.log(songObj);
+                    songObj.displaySong();
+                });
+
             });
         });
     },
     displaySong: function() {
         $("#track .results").hide();
         $("#track .rowData").show();
-        $("#track .list1 li").empty();
-        $("#track .list2 li").empty();
+        $("#track .list1 li").remove();
+        $("#track .list2 li").remove();
         $("#track").find("img").attr('src', this.track.album.images[0].url);
         $("#trackName").text(this.track.name);
-        var entry = ["Artist: " + this.track.artists[0].name, "Album: " + this.track.album.name, "Popularity: " + this.track.popularity];
-        for (var item in entry) {
-            var li = "<li>" + entry[item] + "</li>";
-            $("#track").find(".list1").append(li);
-        }
+        $("#trackArt").text("By: " + this.track.artists[0].name);
+        $("#trackAlb").text("Album: " + this.track.album.name);
         $.each(this.album.tracks.items, function(key, value) {
             if (value.name != songObj.track.name) {
+                var entry = "<li id='" + value.id + "'>" + value.name + "</li>";
+                $("#track").find(".list1").append(entry);
+            }
+        });
+        var albComp;
+        $.each(this.otherAlbs.items, function(key, value) {
+            if (value.name != albComp) {
                 var entry2 = "<li id='" + value.id + "'>" + value.name + "</li>";
                 $("#track").find(".list2").append(entry2);
             }
+            albComp = value.name;
         });
     }
 };
@@ -142,13 +153,39 @@ var songObj = {
 //Defines an object to search for artists, albums or songs and then store
 //and display the results
 var searchObj = {
-    offset: "0",
+    offset: 0,
     getList: function(query, type) {
-        var call = $.getJSON("https://api.spotify.com/v1/search?limit=10&type=" + type + "&q=" + query + "&offset=" + this.offset);
+        this.query = query;
+        var call = $.getJSON("https://api.spotify.com/v1/search?limit=10&type=" + type + "&q=" + this.query + "&offset=" + this.offset);
         call.done(function(data) {
+            console.log(data);
             searchObj.list = data;
-            searchObj.displayList(type);
+            var term = type + 's';
+            if (searchObj.list[term].items.length !== 0) {
+                searchObj.displayList(type);
+            } else {
+                $("#" + type + " .rowData").hide();
+                $("#" + type + " .results").show();
+                $(".results ul").empty();
+                var entry = "<li>Sorry, your search returned no results.</li>";
+                $("#" + type + " .results ul").append(entry);
+            }
+
         });
+    },
+    more: function(change, type) {
+        if (change) {
+            this.offset += 10;
+            if (this.offset >= this.list.total) {
+                this.offset = this.list.total - 10;
+            }
+        } else {
+            this.offset -= 10;
+            if (this.offset < 10) {
+                this.offset = 0;
+            }
+        }
+        this.getList(this.query, type);
     },
     displayList: function(type) {
         $("#" + type + " .rowData").hide();
@@ -157,13 +194,24 @@ var searchObj = {
         var listName = type + 's';
         var list = this.list[listName].items;
         $.each(list, function(key, value) {
-            var entry = "<li id='" + value.id + "''>" + value.name + "</li>";
-            if (type == 'track') {
-                var pos = entry.indexOf("-");
-                var n = [entry.slice(0, pos + 1), value.artists[0].name, entry.slice(pos + 1)].join('');
-                entry = n;
+            var entry;
+            if (type == 'album') {
+                var artName;
+                var albTemp = $.getJSON(value.href);
+                albTemp.done(function(info) {
+                    console.log(info);
+                    artName = info.artists[0].name;
+                    entry = "<li id='" + value.id + "''>" + value.name + " by " + artName + "</li>";
+                    $("#" + type + " .results ul").append(entry);
+                });
+            } else if (type == 'track') {
+                entry = "<li id='" + value.id + "''>" + value.name + " by " + value.artists[0].name + "</li>";
+                $("#" + type + " .results ul").append(entry);
+            } else {
+                entry = "<li id='" + value.id + "''>" + value.name + "</li>";
+                $("#" + type + " .results ul").append(entry);
             }
-            $("#" + type + " .results ul").append(entry);
+
         });
 
         $("#" + type + " .results ul").off('click').on('click', 'li', function() {
@@ -211,6 +259,13 @@ $(document).ready(function() {
         }
     });
 
+    $("#prevArtSearch").click(function() {
+        searchObj.more(false, 'artist');
+    });
+    $("#nextArtSearch").click(function() {
+        searchObj.more(true, 'artist');
+    });
+
     $("#prevAlbs").click(function() {
         artObj.moreAlbums(false);
     });
@@ -226,6 +281,15 @@ $(document).ready(function() {
             searchObj.getList($("#albQuery").val(), "album");
         }
     });
+
+    $("#prevAlbSearch").click(function() {
+        searchObj.more(false, 'album');
+    });
+    $("#nextAlbSearch").click(function() {
+        searchObj.more(true, 'album');
+    });
+
+
     $("#searchTrack").click(function() {
         searchObj.getList($("#trackQuery").val(), "track");
     });
@@ -233,6 +297,13 @@ $(document).ready(function() {
         if (e.keyCode == 13) {
             searchObj.getList($("#trackQuery").val(), "track");
         }
+    });
+
+    $("#prevTrackSearch").click(function() {
+        searchObj.more(false, 'track');
+    });
+    $("#nextTrackSearch").click(function() {
+        searchObj.more(true, 'track');
     });
 
 
