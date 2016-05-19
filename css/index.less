@@ -1,0 +1,189 @@
+@backcolor: #f1f0ee;
+@outlinecolor: #c9c3ba;
+body {
+    font-size: 80%;
+    font-family: 'Lucida Grande', Verdana, Arial, Sans-Serif;
+    text-align: center;
+    max-width: 1200px;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+section {
+    margin: 0 .25rem;
+}
+
+.column {
+    flex-direction: column;
+    width: 33%;
+}
+
+.row {
+    display: flex;
+    justify-content: center;
+}
+
+.search {}
+
+ul {
+    list-style-type: none;
+    text-align: left;
+    margin-bottom: 0.2rem;
+}
+
+li {
+    padding: 0.25rem 0;
+}
+
+button {
+    padding: .5rem 1rem;
+    font-size: 1rem;
+    margin:  .5rem 0.5rem;
+    cursor: pointer;
+}
+input {
+    margin:  .5rem 0.5rem;
+}
+.tabContent {
+    text-align: center;
+}
+
+.rowData {
+    display: flex;
+    justify-content: space-around;
+}
+
+
+.results button, .rowData button {
+    padding: .2rem .5rem;
+    font-size: .7rem;
+    margin:  .5rem 0.5rem;
+}
+.results li {
+    cursor: pointer;
+}
+
+.tabContent img {
+    width: 75%;
+}
+
+ul#tabs {
+    list-style-type: none;
+    margin: 30px 0 0 0;
+    padding: 0 1.05rem 0.3em 0;
+    width: 98%;
+    margin: 0 auto;
+}
+
+ul#tabs li {
+    display: inline;
+}
+
+ul#tabs li a {
+    color: #42454a;
+    background-color: #dedbde;
+    border: 1px solid @outlinecolor;
+    border-bottom: none;
+    padding: 0.3em;
+    text-decoration: none;
+}
+
+ul#tabs li a:hover {
+    background-color: @backcolor;
+}
+
+ul#tabs li a.selected {
+    color: #000;
+    background-color: @backcolor;
+    font-weight: bold;
+    padding: 0.7em 0.3em 0.38em 0.3em;
+}
+
+div.tabContent {
+    border: 1px solid @outlinecolor;
+    padding: 2rem 0.5em 2rem 0.5rem;
+    background-color: @backcolor;
+    width: 98%;
+    margin: 0 auto;
+}
+
+div.tabContent.hide {
+    display: none;
+}
+.results {
+    width: 50%;
+    margin:0 auto;
+}
+
+.results ul {
+    text-align: center;
+    margin-left: -2rem;
+}
+
+
+/*footer styles*/
+
+.foot-row {
+    display: flex;
+    justify-content: space-between;
+}
+
+.foot-row * {
+    padding: .5rem 1rem;
+}
+
+.logo,
+.profile {
+    height: 4rem;
+}
+
+.profile {
+    border-radius: 50%
+}
+
+.center {
+    text-align: center;
+}
+
+
+/*responsive styles*/
+
+
+/*ipad potrait*/
+
+@media only screen and (max-width: 768px) {
+    .logo,
+    .profile {
+        height: 3.5rem;
+    }
+    div.tabContent {
+        padding: 1.5rem 0.5rem 1.5rem 0.5rem;
+    }
+}
+
+
+/*iPhone landscape*/
+
+@media only screen and (max-width: 480px) {
+    .rowData {
+        flex-wrap: wrap;
+    }
+    .column {
+        width: 60%;
+        display: block !important;
+        margin: 0 auto;
+    }
+    div.tabContent {
+        padding: 1rem 0.5rem 1rem 0.5rem;
+    }
+    li {
+        padding: 0rem;
+    }
+    h2 {
+        margin: .1rem;
+    }
+
+}
+
+
+/*iPhone portrait*/

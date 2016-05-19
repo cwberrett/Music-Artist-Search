@@ -14,7 +14,6 @@ var artObj = {
                 var songCall = $.getJSON('https://api.spotify.com/v1/artists/' + id + '/top-tracks?country=US');
                 songCall.done(function(data) {
                     artObj.topSongs = data;
-                    console.log(artObj);
                     artObj.displayArtist();
                 });
             });
@@ -46,7 +45,6 @@ var artObj = {
         var albComp;
         $.each(albums, function(key, value) {
             if (value.name == albComp) {
-                console.log("repeat");
             } else {
                 var entry = "<li id='" + value.id + "'>" + value.name + "</li>";
                 $("#artist").find(".list1").append(entry);
@@ -72,7 +70,6 @@ var albObj = {
             var artCall = $.getJSON('https://api.spotify.com/v1/artists/' + albObj.album.artists[0].id + '/albums?limit=10');
             artCall.done(function(data) {
                 albObj.otherAlbs = data;
-                console.log(albObj);
                 albObj.displayAlbum();
             });
         });
@@ -94,7 +91,7 @@ var albObj = {
         var others = this.otherAlbs.items;
         var albComp;
         $.each(others, function(key, value) {
-            if (value.name == albComp) { console.log("repeat"); } else {
+            if (value.name == albComp) {  } else {
                 var entry = "<li id='" + value.id + "'>" + value.name + "</li>";
                 $("#album").find(".list2").append(entry);
             }
@@ -117,7 +114,6 @@ var songObj = {
                 var artCall = $.getJSON('https://api.spotify.com/v1/artists/' + songObj.track.artists[0].id + '/albums?limit=10&offset=' + songObj.offset);
                 artCall.done(function(art) {
                     songObj.otherAlbs = art;
-                    console.log(songObj);
                     songObj.displaySong();
                 });
 
@@ -158,7 +154,6 @@ var searchObj = {
         this.query = query;
         var call = $.getJSON("https://api.spotify.com/v1/search?limit=10&type=" + type + "&q=" + this.query + "&offset=" + this.offset);
         call.done(function(data) {
-            console.log(data);
             searchObj.list = data;
             var term = type + 's';
             if (searchObj.list[term].items.length !== 0) {
@@ -199,7 +194,6 @@ var searchObj = {
                 var artName;
                 var albTemp = $.getJSON(value.href);
                 albTemp.done(function(info) {
-                    console.log(info);
                     artName = info.artists[0].name;
                     entry = "<li id='" + value.id + "''>" + value.name + " by " + artName + "</li>";
                     $("#" + type + " .results ul").append(entry);
