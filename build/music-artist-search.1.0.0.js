@@ -288,10 +288,12 @@
 	
 	    $("#searchArt").click(function () {
 	        searchObj.getList($("#artQuery").val(), "artist");
+	        $("#artQuery").val('');
 	    });
 	    $("#artQuery").keyup(function (e) {
 	        if (e.keyCode == 13) {
 	            searchObj.getList($("#artQuery").val(), "artist");
+	            $("#artQuery").val('');
 	        }
 	    });
 	
@@ -311,11 +313,13 @@
 	
 	    $("#searchAlb").click(function () {
 	        searchObj.getList($("#albQuery").val(), "album");
+	        $("#albQuery").val('');
 	    });
 	    $("#albQuery").keyup(function (e) {
 	        if (e.keyCode == 13) {
 	            searchObj.getList($("#albQuery").val(), "album");
 	        }
+	        $("#albQuery").val('');
 	    });
 	
 	    $("#prevAlbSearch").click(function () {
@@ -327,11 +331,13 @@
 	
 	    $("#searchTrack").click(function () {
 	        searchObj.getList($("#trackQuery").val(), "track");
+	        $("#artQuery").val('');
 	    });
 	    $("#trackQuery").keyup(function (e) {
 	        if (e.keyCode == 13) {
 	            searchObj.getList($("#trackQuery").val(), "track");
 	        }
+	        $("#artQuery").val('');
 	    });
 	
 	    $("#prevTrackSearch").click(function () {
