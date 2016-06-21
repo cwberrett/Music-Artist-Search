@@ -318,8 +318,8 @@
 	    $("#albQuery").keyup(function (e) {
 	        if (e.keyCode == 13) {
 	            searchObj.getList($("#albQuery").val(), "album");
+	            $("#albQuery").val('');
 	        }
-	        $("#albQuery").val('');
 	    });
 	
 	    $("#prevAlbSearch").click(function () {

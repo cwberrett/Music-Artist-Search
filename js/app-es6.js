@@ -44,8 +44,7 @@ var artObj = {
         let albums = this.albums.items;
         let albComp;
         $.each(albums, function(key, value) {
-            if (value.name == albComp) {
-            } else {
+            if (value.name == albComp) {} else {
                 let entry = "<li id='" + value.id + "'>" + value.name + "</li>";
                 $("#artist").find(".list1").append(entry);
             }
@@ -91,7 +90,7 @@ var albObj = {
         let others = this.otherAlbs.items;
         let albComp;
         $.each(others, function(key, value) {
-            if (value.name == albComp) {  } else {
+            if (value.name == albComp) {} else {
                 let entry = "<li id='" + value.id + "'>" + value.name + "</li>";
                 $("#album").find(".list2").append(entry);
             }
@@ -276,8 +275,9 @@ $(document).ready(function() {
     $("#albQuery").keyup(function(e) {
         if (e.keyCode == 13) {
             searchObj.getList($("#albQuery").val(), "album");
+            $("#albQuery").val('');
         }
-        $("#albQuery").val('');
+
     });
 
     $("#prevAlbSearch").click(function() {
